@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot name="iiwa7" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find lbr_description)/urdf/iiwa7/iiwa7_description.xacro" />
+
+    <xacro:arg name="robot_name" default="lbr" />
+    <xacro:arg name="mode" default="mock" />
+    <xacro:arg
+        name="system_config_path"
+        default="$(find lbr_description)/ros2_control/lbr_system_config.yaml" />
+    <xacro:arg
+        name="initial_joint_positions_path"
+        default="$(find lbr_description)/ros2_control/initial_joint_positions.yaml" />
+
+    <link name="world" />
+
+    <link name="table_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://zivid_artist_bot/meshes/table.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="gray">
+                <color rgba="0.8 0.8 0.8 1" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://zivid_artist_bot/meshes/table.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="world_to_table_joint" type="fixed">
+        <parent link="world" />
+        <child link="table_link" />
+        <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    </joint>
+
+    <xacro:iiwa7
+        robot_name="$(arg robot_name)"
+        mode="$(arg mode)"
+        system_config_path="$(arg system_config_path)"
+        initial_joint_positions_path="$(arg initial_joint_positions_path)" />
+
+    <joint name="table_to_robot_joint" type="prismatic">
+        <parent link="table_link" />
+        <child link="$(arg robot_name)_link_0" />
+        <axis xyz="0 0 1" />
+        <limit lower="-2.0" upper="2.0" effort="10.0" velocity="1.0" />
+        <origin xyz="0 0.04 0" rpy="-1.57079 0 0" />
+    </joint>
+
+</robot>
