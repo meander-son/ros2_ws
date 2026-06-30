@@ -1,11 +1,24 @@
 #!/bin/sh
 set -eu
 
-blocked_files=$(git diff --cached --name-only --diff-filter=ACMRT | grep -E '^(build|install|log|\.venv|\.vscode)(/|$)|(^|/)(__pycache__)(/|$)|\.pyc$|\.pyo$|\.egg-info(/|$)' || true)
+staged_files=$(git diff --cached --name-only --diff-filter=ACMRT)
+blocked_files=$(printf '%s\n' "$staged_files" | grep -E '^(build|install|log|\.venv|\.vscode)(/|$)|(^|/)(__pycache__)(/|$)|\.pyc$|\.pyo$|\.egg-info(/|$)' || true)
+blocked_submodules=""
 
-if [ -n "$blocked_files" ]; then
+for staged_path in $staged_files; do
+  if git ls-files --stage -- "$staged_path" | awk '$1 == "160000" { found = 1 } END { exit(found ? 0 : 1) }'; then
+    blocked_submodules="$blocked_submodules${blocked_submodules:+
+}$staged_path"
+  fi
+done
+
+if [ -n "$blocked_files$blocked_submodules" ]; then
   printf '%s\n' "Refusing commit: generated or local workspace files are staged:"
   printf '%s\n' "$blocked_files"
+  if [ -n "$blocked_submodules" ]; then
+    printf '%s\n' "Submodule pointer updates are also blocked:"
+    printf '%s\n' "$blocked_submodules"
+  fi
   printf '%s\n' "Stage only source files, package manifests, docs, and intentional assets."
   exit 1
 fi
