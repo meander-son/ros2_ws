@@ -1,0 +1,19 @@
+# ROS 2 workspace outputs
+build/
+install/
+log/
+
+# Local environments and editor state
+.venv/
+.vscode/
+.pytest_cache/
+.mypy_cache/
+
+# Python bytecode and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.swp
+
+# Common OS noise
+.DS_Store

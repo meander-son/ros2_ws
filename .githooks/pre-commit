@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+blocked_files=$(git diff --cached --name-only --diff-filter=ACMRT | grep -E '^(build|install|log|\.venv|\.vscode)(/|$)|(^|/)(__pycache__)(/|$)|\.pyc$|\.pyo$|\.egg-info(/|$)' || true)
+
+if [ -n "$blocked_files" ]; then
+  printf '%s\n' "Refusing commit: generated or local workspace files are staged:"
+  printf '%s\n' "$blocked_files"
+  printf '%s\n' "Stage only source files, package manifests, docs, and intentional assets."
+  exit 1
+fi

@@ -17,6 +17,10 @@
   <depend>rviz2</depend>
   <depend>xacro</depend>
   <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>iiwa14_moveit_config</exec_depend>
+  <exec_depend>iiwa14_description</exec_depend>
+  <exec_depend>moveit_configs_utils</exec_depend>
+  <exec_depend>moveit_ros_move_group</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
