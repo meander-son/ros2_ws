@@ -5,6 +5,7 @@ log/
 
 # Local environments and editor state
 .venv/
+src/.venv/
 .vscode/
 .pytest_cache/
 .mypy_cache/
