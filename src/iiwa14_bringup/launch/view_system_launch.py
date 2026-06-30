@@ -6,6 +6,7 @@ from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
 
+
 def generate_launch_description():
     # 1. Gather relevant package paths
     description_share = get_package_share_directory('iiwa14_description')
@@ -16,7 +17,7 @@ def generate_launch_description():
         'moveit.rviz',
     )
     robot_namespace = 'lbr'
-        
+
     # 2. Build MoveIt configurations targeting your custom combined Xacro file
     moveit_config = (
         MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
@@ -61,7 +62,7 @@ def generate_launch_description():
         nodes.append(Node(
             package='rviz2',
             executable='rviz2',
-            arguments=['-d', rviz_config], 
+            arguments=['-d', rviz_config],
             parameters=[
                 moveit_config.robot_description,
                 moveit_config.robot_description_semantic,
@@ -81,7 +82,7 @@ def generate_launch_description():
         ))
 
         # ── CONTROLLERS / JOINT STATE TRACKING ────────────────────────────────
-        # MoveIt relies on incoming joint states from your controllers. 
+        # MoveIt relies on incoming joint states from your controllers.
         # For mock/simulation, we track using the moveit joint state broadcaster:
         nodes.append(Node(
             package="joint_state_publisher",

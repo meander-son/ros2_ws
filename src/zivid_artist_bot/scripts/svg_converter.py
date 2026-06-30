@@ -15,6 +15,7 @@ import skimage.color
 import skimage.transform
 from skimage import measure, exposure, feature, filters
 from scipy import ndimage
+from ament_index_python.packages import get_package_share_directory
 
 # ---------------------------------------------------------
 # SOTA SEGMENTATION IMPORT
@@ -50,7 +51,11 @@ class ImageToSvgConverter(Node):
                 self.get_logger().error(f'Failed to connect to Zivid camera: {e}')
                 sys.exit(1)
                 
-            self.settings_path = '/home/mark/ros2_ws/src/zivid_artist_bot/config/zivid_settings.yml'
+            self.settings_path = os.path.join(
+                get_package_share_directory('iiwa14_bringup'),
+                'config',
+                'zivid_settings.yaml',
+            )
         else:
             self.get_logger().info('Local image mode active. Skipping Zivid camera initialization.')
 
