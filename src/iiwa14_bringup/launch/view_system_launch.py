@@ -17,14 +17,20 @@ def generate_launch_description():
         'moveit.rviz',
     )
     robot_namespace = 'lbr'
-
-    # 2. Build MoveIt configurations targeting your custom combined Xacro file
-    moveit_config = (
-        MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
-        .robot_description(file_path=urdf_xacro, mappings={"robot_name": robot_namespace, "mode": "mock"})
-        .robot_description_semantic(mappings={"robot_name": robot_namespace})
-        .to_moveit_configs()
+    
+    # add near other paths
+    srdf_path = os.path.join(
+    get_package_share_directory('iiwa14_bringup'),
+    'config',
+    'iiwa14_semantic.srdf',
     )
+
+    moveit_config = (
+    MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
+    .robot_description(file_path=urdf_xacro, mappings={"robot_name": robot_namespace, "mode": "mock"})
+    .robot_description_semantic(file_path=srdf_path)
+    .to_moveit_configs()
+    )   
 
     # Declare GUI argument for fallback tracking
     use_gui_arg = DeclareLaunchArgument(
