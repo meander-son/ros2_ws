@@ -9,8 +9,8 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 def generate_launch_description():
     # 1. Gather relevant package paths
-    description_share = get_package_share_directory('iiwa14_description')
-    urdf_xacro = os.path.join(description_share, 'urdf', 'iiwa14', 'iiwa14.xacro')
+    description_share = get_package_share_directory('zivid_artist_bot')
+    urdf_xacro = os.path.join(description_share, 'urdf', 'artist_bot.xacro')
     rviz_config = os.path.join(
         get_package_share_directory('iiwa14_moveit_config'),
         'config',
