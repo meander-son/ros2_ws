@@ -193,7 +193,71 @@ mark@mark-ThinkPad-L14-Gen-3:~/ros2_ws$ LIBGL_ALWAYS_SOFTWARE=1 ros2 launch zivi
 [rviz2-2] [INFO] [1782809384.407653617] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
 [rviz2-2] [INFO] [1782809384.408307388] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/monitored_planning_scene'
 [rviz2-2] [INFO] [1782809384.417747673] [moveit_ros_visualization.motion_planning_frame]: group arm
-[rviz2-2] [INFO] [1782809384.417779631] [moveit_ros_visualization.motion_planning_frame]: Constructing new MoveGroup connection for group 'arm' in namespace 'lbr'
+[rviz2-2] [INFO] [1782809384.417779631] [moveit_ros_visualization.motion_planning_frame]: Constructing new MoveGroup connection for group 'arm' in namespmark@mark-ThinkPad-L14-Gen-3:~/ros2_ws$ ros2 launch zivid_artist_bot view_system_launch.py 
+[INFO] [launch]: All log files can be found below /home/mark/.ros/log/2026-06-30-11-48-18-394706-mark-ThinkPad-L14-Gen-3-25732
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [move_group-1]: process started with pid [25733]
+[INFO] [rviz2-2]: process started with pid [25735]
+[INFO] [robot_state_publisher-3]: process started with pid [25737]
+[INFO] [joint_state_publisher-4]: process started with pid [25739]
+[rviz2-2] Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+[robot_state_publisher-3] Error:   No name given for the robot.
+[robot_state_publisher-3]          at line 118 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-3] Failed to parse robot description using: urdf_xml_parser/URDFXMLParser
+[robot_state_publisher-3] terminate called after throwing an instance of 'std::runtime_error'
+[robot_state_publisher-3]   what():  Unable to initialize urdf::model from robot description
+[move_group-1] Error:   No name given for the robot.
+[move_group-1]          at line 118 in ./urdf_parser/src/model.cpp
+[move_group-1] Failed to parse robot description using: urdf_xml_parser/URDFXMLParser
+[move_group-1] [INFO] [1782816498.628654985] [moveit_rdf_loader.rdf_loader]: Unable to parse URDF
+[move_group-1] [ERROR] [1782816498.638847816] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Robot model not loaded
+[move_group-1] [ERROR] [1782816498.639301792] [moveit.ros_planning_interface.moveit_cpp]: Planning scene not configured
+[move_group-1] [FATAL] [1782816498.639335539] [moveit.ros_planning_interface.moveit_cpp]: Unable to configure planning scene monitor
+[move_group-1] terminate called after throwing an instance of 'std::runtime_error'
+[move_group-1]   what():  Unable to configure planning scene monitor
+[move_group-1] Stack trace (most recent call last):
+[move_group-1] #12   Object "", at 0xffffffffffffffff, in 
+[move_group-1] #11   Object "/opt/ros/humble/lib/moveit_ros_move_group/move_group", at 0x595d37869724, in 
+[move_group-1] #10   Source "../csu/libc-start.c", line 392, in __libc_start_main_impl [0x7c5233629e3f]
+[move_group-1] #9    Source "../sysdeps/nptl/libc_start_call_main.h", line 58, in __libc_start_call_main [0x7c5233629d8f]
+[move_group-1] #8    Object "/opt/ros/humble/lib/moveit_ros_move_group/move_group", at 0x595d378682c2, in 
+[move_group-1] #7    Object "/opt/ros/humble/lib/libmoveit_cpp.so.2.5.9", at 0x7c52341694c3, in 
+[move_group-1] #6    Object "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30", at 0x7c5233aae4d7, in __cxa_throw
+[move_group-1] #5    Object "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30", at 0x7c5233aae276, in std::terminate()
+[move_group-1] #4    Object "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30", at 0x7c5233aae20b, in 
+[move_group-1] #3    Object "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30", at 0x7c5233aa2b9d, in 
+[move_group-1] #2    Source "./stdlib/abort.c", line 79, in abort [0x7c52336287f2]
+[move_group-1] #1    Source "../sysdeps/posix/raise.c", line 26, in raise [0x7c5233642475]
+[move_group-1] #0  | Source "./nptl/pthread_kill.c", line 89, in __pthread_kill_internal
+[move_group-1]     | Source "./nptl/pthread_kill.c", line 78, in __pthread_kill_implementation
+[move_group-1]       Source "./nptl/pthread_kill.c", line 44, in __pthread_kill [0x7c52336969fc]
+[move_group-1] Aborted (Signal sent by tkill() 25733 1000)
+[rviz2-2] [INFO] [1782816498.874937202] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1782816498.874998677] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1782816498.894116761] [rviz2]: Stereo is NOT SUPPORTED
+[joint_state_publisher-4] [INFO] [1782816498.923784152] [lbr.joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...
+[rviz2-2] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-2]          at line 253 in /opt/ros/humble/include/class_loader/class_loader/class_loader_core.hpp
+[ERROR] [robot_state_publisher-3]: process has died [pid 25737, exit code -6, cmd '/opt/ros/humble/lib/robot_state_publisher/robot_state_publisher --ros-args -r __ns:=/lbr --params-file /tmp/launch_params_p8bkbb2j'].
+[ERROR] [move_group-1]: process has died [pid 25733, exit code -6, cmd '/opt/ros/humble/lib/moveit_ros_move_group/move_group --ros-args -r __ns:=/lbr --params-file /tmp/launch_params_nbf7v8tx --params-file /tmp/launch_params_8gnjc5bw'].
+[rviz2-2] [ERROR] [1782816502.011539043] [moveit_ros_visualization.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-2] [INFO] [1782816502.026233417] [moveit_ros_visualization.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-2] [INFO] [1782816502.027372679] [moveit_ros_visualization.motion_planning_frame]: MoveGroup namespace changed: / -> lbr. Reloading params.
+[rviz2-2] Error:   No name given for the robot.
+[rviz2-2]          at line 118 in ./urdf_parser/src/model.cpp
+[rviz2-2] Failed to parse robot description using: urdf_xml_parser/URDFXMLParser
+[rviz2-2] [INFO] [1782816502.078091477] [moveit_rdf_loader.rdf_loader]: Unable to parse URDF
+[rviz2-2] [ERROR] [1782816502.084393129] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Robot model not loaded
+[rviz2-2] Error:   No name given for the robot.
+[rviz2-2]          at line 118 in ./urdf_parser/src/model.cpp
+[rviz2-2] Failed to parse robot description using: urdf_xml_parser/URDFXMLParser
+[rviz2-2] [INFO] [1782816502.111445446] [moveit_rdf_loader.rdf_loader]: Unable to parse URDF
+[rviz2-2] [ERROR] [1782816502.115017041] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Robot model not loaded
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[rviz2-2] [INFO] [1782816531.226985209] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [joint_state_publisher-4]: process has finished cleanly [pid 25739]
+[ERROR] [rviz2-2]: process has died [pid 25735, exit code -11, cmd '/opt/ros/humble/lib/rviz2/rviz2 -d /home/mark/ros2_ws/install/iiwa14_moveit_config/share/iiwa14_moveit_config/config/moveit.rviz --ros-args --params-file /tmp/launch_params_lxbugt82 --params-file /tmp/launch_params_lgkvigz8 --params-file /tmp/launch_params_0bdmlip9 --params-file /tmp/launch_params_wnjy08y4'].
+ace 'lbr'
 [rviz2-2] [INFO] [1782809384.425218158] [move_group_interface]: Ready to take commands for planning group arm.
 [rviz2-2] [INFO] [1782809384.426946173] [moveit_ros_visualization.motion_planning_frame]: group arm
 [rviz2-2] [INFO] [1782809384.455541472] [interactive_marker_display_110768591045216]: Sending request for interactive markers
