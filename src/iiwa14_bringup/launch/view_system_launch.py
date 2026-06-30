@@ -17,7 +17,7 @@ def generate_launch_description():
         'moveit.rviz',
     )
 
-    # IMPORTANT: point to the controller yaml you edited to iiwa_joint_*
+    # IMPORTANT: keep this aligned with the live iiwa_joint_* joint naming used by the URDF.
     ros2_controllers_path = os.path.join(
         get_package_share_directory('iiwa14_description'),
         'ros2_control',
