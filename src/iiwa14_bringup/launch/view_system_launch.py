@@ -8,34 +8,43 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
-    # 1. Gather relevant package paths
     description_share = get_package_share_directory('zivid_artist_bot')
     urdf_xacro = os.path.join(description_share, 'urdf', 'artist_bot.xacro')
+
     rviz_config = os.path.join(
         get_package_share_directory('iiwa14_moveit_config'),
         'config',
         'moveit.rviz',
     )
-    robot_namespace = 'lbr'
-    
-    # add near other paths
-    srdf_path = os.path.join(
-    get_package_share_directory('iiwa14_bringup'),
-    'config',
-    'iiwa14_semantic.srdf',
+
+    # IMPORTANT: point to the controller yaml you edited to iiwa_joint_*
+    ros2_controllers_path = os.path.join(
+        get_package_share_directory('iiwa14_description'),
+        'ros2_control',
+        'lbr_controllers.yaml',
     )
 
-    moveit_config = (
-    MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
-    .robot_description(file_path=urdf_xacro, mappings={"robot_name": robot_namespace, "mode": "mock"})
-    .robot_description_semantic(file_path=srdf_path)
-    .to_moveit_configs()
-    )   
+    srdf_path = os.path.join(
+        get_package_share_directory('iiwa14_bringup'),
+        'config',
+        'iiwa14_semantic.srdf',
+    )
 
-    # Declare GUI argument for fallback tracking
+    robot_namespace = 'lbr'
+
+    moveit_config = (
+        MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
+        .robot_description(
+            file_path=urdf_xacro,
+            mappings={"robot_name": robot_namespace, "mode": "mock"},
+        )
+        .robot_description_semantic(file_path=srdf_path)
+        .to_moveit_configs()
+    )
+
     use_gui_arg = DeclareLaunchArgument(
         'use_gui',
-        default_value='false',  # Set default to false since MoveIt will track joint state publishers instead
+        default_value='false',
         description="Start the joint state publisher GUI."
     )
 
@@ -46,8 +55,6 @@ def generate_launch_description():
         move_group_runtime = {
             "publish_robot_description_semantic": True,
             "allow_trajectory_execution": True,
-            "capabilities": "",
-            "disable_capabilities": "",
             "publish_planning_scene": True,
             "publish_geometry_updates": True,
             "publish_state_updates": True,
@@ -55,49 +62,66 @@ def generate_launch_description():
             "monitor_dynamics": False,
         }
 
-        # ── MOVE GROUP (The Core MoveIt Brain) ────────────────────────────────
+        # ros2_control controller manager
+        nodes.append(Node(
+            package="controller_manager",
+            executable="ros2_control_node",
+            namespace=robot_namespace,
+            parameters=[
+                moveit_config.robot_description,
+                ros2_controllers_path,
+            ],
+            output="screen",
+        ))
+
+        # spawn controllers
+        nodes.append(Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=[
+                "joint_state_broadcaster",
+                "--controller-manager", f"/{robot_namespace}/controller_manager",
+            ],
+            output="screen",
+        ))
+
+        nodes.append(Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=[
+                "joint_trajectory_controller",
+                "--controller-manager", f"/{robot_namespace}/controller_manager",
+            ],
+            output="screen",
+        ))
+
         nodes.append(Node(
             package="moveit_ros_move_group",
             executable="move_group",
-            output="screen",
             namespace=robot_namespace,
+            output="screen",
             parameters=[moveit_config.to_dict(), move_group_runtime],
         ))
 
-        # ── RVIZ2 (With MoveIt parameters fully mapped) ───────────────────────
         nodes.append(Node(
             package='rviz2',
             executable='rviz2',
             arguments=['-d', rviz_config],
+            output='screen',
             parameters=[
                 moveit_config.robot_description,
                 moveit_config.robot_description_semantic,
                 moveit_config.planning_pipelines,
                 moveit_config.robot_description_kinematics,
             ],
-            output='screen'
         ))
 
-        # ── ROBOT STATE PUBLISHER ─────────────────────────────────────────────
         nodes.append(Node(
             package="robot_state_publisher",
             executable="robot_state_publisher",
+            namespace=robot_namespace,
             output="screen",
-            namespace=robot_namespace,
             parameters=[moveit_config.robot_description],
-        ))
-
-        # ── CONTROLLERS / JOINT STATE TRACKING ────────────────────────────────
-        # MoveIt relies on incoming joint states from your controllers.
-        # For mock/simulation, we track using the moveit joint state broadcaster:
-        nodes.append(Node(
-            package="joint_state_publisher",
-            executable="joint_state_publisher",
-            namespace=robot_namespace,
-            parameters=[
-                moveit_config.robot_description,
-                {"source_list": ["move_group/joint_states"]},
-            ],
         ))
 
         if use_gui:
@@ -111,5 +135,5 @@ def generate_launch_description():
 
     return LaunchDescription([
         use_gui_arg,
-        OpaqueFunction(function=create_nodes)
+        OpaqueFunction(function=create_nodes),
     ])
