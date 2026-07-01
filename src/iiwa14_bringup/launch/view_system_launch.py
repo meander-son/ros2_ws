@@ -36,11 +36,13 @@ def generate_launch_description():
         MoveItConfigsBuilder("iiwa14", package_name="iiwa14_moveit_config")
         .robot_description(
             file_path=urdf_xacro,
-            mappings={"robot_name": robot_namespace, "mode": "mock"},
+            # Force the internal macro to evaluate without a custom string prefix
+            mappings={"robot_name": "", "mode": "mock"}, 
         )
         .robot_description_semantic(file_path=srdf_path)
         .to_moveit_configs()
     )
+
 
     use_gui_arg = DeclareLaunchArgument(
         'use_gui',
