@@ -25,6 +25,8 @@ setup(
     entry_points={
         'console_scripts': [
             'capture_and_create_svg = zivid_artist_bot.svg_converter:main',
+            'single_joint_test = zivid_artist_bot.single_joint_test:main',
+            'cartesian_control_test = zivid_artist_bot.cartesian_control_test:main',
 
         ],
     },
