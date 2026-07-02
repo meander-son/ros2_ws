@@ -27,7 +27,8 @@ setup(
             'capture_and_create_svg = zivid_artist_bot.svg_converter:main',
             'single_joint_test = zivid_artist_bot.single_joint_test:main',
             'cartesian_control_test = zivid_artist_bot.cartesian_control_test:main',
-
+            'laptop_manual_jogger = zivid_artist_bot.laptop_manual_jogger:main',
+            'simulate_drawing = zivid_artist_bot.simulate_drawing:main',
         ],
     },
 )

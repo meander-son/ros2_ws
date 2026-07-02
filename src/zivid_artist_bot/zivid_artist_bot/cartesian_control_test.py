@@ -1,13 +1,14 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.action import ActionClient
+
 from moveit_msgs.action import MoveGroup
 from moveit_msgs.msg import Constraints, PositionConstraint, OrientationConstraint
+
 from geometry_msgs.msg import PoseStamped
 from shape_msgs.msg import SolidPrimitive
-from rclpy.action import ActionClient
-# Switch to scipy to avoid tf_transformations installation issues
-from scipy.spatial.transform import Rotation as R 
 
+from scipy.spatial.transform import Rotation as R
 class CartesianController(Node):
     def __init__(self):
         super().__init__('cartesian_controller')
@@ -36,11 +37,16 @@ class CartesianController(Node):
         target_pose.pose.position.y = self.target_position[1]
         target_pose.pose.position.z = self.target_position[2]
 
-        # Convert Roll, Pitch, Yaw to a quaternion using SciPy
-        r = R.from_euler('xyz', [3.14, 0.0, 1.57])
+        # Define your exact target Roll, Pitch, Yaw (in radians)
+        # Note: Avoid using raw values like -10 unless you specifically want multiple rotations.
+        target_roll = 0.0    # 0 degrees
+        target_pitch = 0.0  # 90 degrees (Tilted forward from its default 'up' state)
+        target_yaw = 0.0     # 0 degrees
+        
+        r = R.from_euler('xyz', [target_roll, target_pitch, target_yaw])
         q = r.as_quat() # [x, y, z, w]
 
-        # FIX 1: Access .pose.orientation instead of .orientation
+        # Assign orientation to target pose
         target_pose.pose.orientation.x = q[0]
         target_pose.pose.orientation.y = q[1]
         target_pose.pose.orientation.z = q[2]
@@ -53,31 +59,29 @@ class CartesianController(Node):
         
         bounding_box = SolidPrimitive()
         bounding_box.type = SolidPrimitive.BOX
-        bounding_box.dimensions = [0.01, 0.01, 0.01] 
+        bounding_box.dimensions = [0.001, 0.001, 0.001] 
         
         pos_c.constraint_region.primitives.append(bounding_box)
         pos_c.constraint_region.primitive_poses.append(target_pose.pose)
         pos_c.weight = 1.0
         constraints.position_constraints.append(pos_c)
 
-        # --- HORIZONTAL ORIENTATION CONSTRAINT ---
-        # Forces the tool to stay flat/parallel to lbr_link_0, but allows arbitrary yaw rotation
+        # --- CORRECTED ORIENTATION CONSTRAINT ---
         ori_c = OrientationConstraint()
         ori_c.header = target_pose.header
         ori_c.link_name = "lbr_link_ee"
         
-        # An identity quaternion represents zero rotation relative to the base frame (flat)
-        ori_c.orientation.x = 0.0
-        ori_c.orientation.y = 0.0
-        ori_c.orientation.z = 0.0
-        ori_c.orientation.w = 1.0
+        # FIX: Link the constraint reference directly to your calculated target quaternion
+        ori_c.orientation.x = q[0]
+        ori_c.orientation.y = q[1]
+        ori_c.orientation.z = q[2]
+        ori_c.orientation.w = q[3]
         
-        # Tight constraints on X and Y keep the tool plate perfectly horizontal
+        # Tight tolerances (0.01 rad ≈ 0.5 degrees) on all axes force 
+        # the end-effector to match your exact specified angles.
         ori_c.absolute_x_axis_tolerance = 0.01 
         ori_c.absolute_y_axis_tolerance = 0.01
-        
-        # Setting Z tolerance to >= PI (3.14) tells MoveIt to ignore rotation around this axis
-        ori_c.absolute_z_axis_tolerance = 3.14 
+        ori_c.absolute_z_axis_tolerance = 0.01 
         ori_c.weight = 1.0
         constraints.orientation_constraints.append(ori_c)
         
@@ -101,18 +105,13 @@ class CartesianController(Node):
         action_result = get_result_future.result()
         
         if action_result.status == 4:
-            self.get_logger().info("--> Success! Cartesian position and horizontal orientation reached.")
+            self.get_logger().info("--> Success! Exact Cartesian target reached.")
         else:
             self.get_logger().error(f"--> Failed. MoveIt Action Status: {action_result.status}")
-
 def main(args=None):
     rclpy.init(args=args)
     node = CartesianController()
-    
-    # FIX 2: Trigger loop execution outside of __init__ 
     node.run_cartesian_loop()
-        
     rclpy.shutdown()
-
 if __name__ == '__main__':
     main()
