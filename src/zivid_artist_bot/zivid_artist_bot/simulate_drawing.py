@@ -22,9 +22,9 @@ class SvgRobotDrawingNode(Node):
         self.svg_filepath = svg_filepath
         self.drawHeight = 0.0
         self.safeHeight = 0.005
-        self.offset_x = 0.2
-        self.offset_y = 0.0
-        self.scale_factor = 0.00001
+        self.offset_x = 0.25 
+        self.offset_y = 0.1 # more reliable at these offsets for some reason 
+        self.scale_factor = 0.0005
 
         self.latest_joint_state = None
         self.create_subscription(
@@ -90,8 +90,8 @@ class SvgRobotDrawingNode(Node):
         goal_msg.request.group_name = "arm"
         goal_msg.request.pipeline_id = "pilz_industrial_motion_planner"
         goal_msg.request.planner_id = "LIN"
-        goal_msg.request.num_planning_attempts = 1
-        goal_msg.request.allowed_planning_time = 5.0
+        goal_msg.request.num_planning_attempts = 100
+        goal_msg.request.allowed_planning_time = 15.0
         goal_msg.request.max_velocity_scaling_factor = 0.1
         goal_msg.request.max_acceleration_scaling_factor = 0.1
 
