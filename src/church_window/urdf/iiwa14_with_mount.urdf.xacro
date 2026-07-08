@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="iiwa14_zivid">
+  <xacro:include filename="$(find lbr_description)/urdf/iiwa14/iiwa14_description.xacro" />
+  
+  <link name="world" />
+  <xacro:iiwa14 robot_name="lbr" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link="lbr_link_0" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <link name="zivid_base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://church_window/meshes/Construction_end_point.obj" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://church_window/meshes/Construction_end_point.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="zivid_joint" type="fixed">
+    <parent link="lbr_link_ee"/>
+    <child link="zivid_base_link" />
+    <origin xyz="0 0 0" rpy="0 0 -1.5708" /> 
+  </joint>
+
+  <joint name="zivid_camera_joint" type="fixed">
+    <parent link="zivid_base_link" />
+    <child link="zivid_camera_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <link name="zivid_camera_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://church_window/meshes/Construction_end_point_ONLY_ZIVID.obj" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://church_window/meshes/Construction_end_point_ONLY_ZIVID.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+<link name="sensor_tip" />
+  <joint name="sensor_tip_joint" type="fixed">
+    <parent link="zivid_camera_link" />
+    <child link="sensor_tip" />
+    <origin xyz="0.0 0.0 0.17027" rpy="0 0 0" /> 
+  </joint>
+
+  <link name="zivid_optical_frame" />
+  <joint name="zivid_optical_joint" type="fixed">
+    <parent link="zivid_camera_link" />
+    <child link="zivid_optical_frame" />
+    <origin xyz="0.055648 0.078248 0.080249" rpy="0 0 0" />
+  </joint>
+
+  </robot>
