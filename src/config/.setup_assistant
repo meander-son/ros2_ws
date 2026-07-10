@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: church_window
+    relative_path: urdf/iiwa14_with_mount.urdf.xacro
+  srdf:
+    relative_path: config/iiwa14_zivid.srdf
+  package_settings:
+    author_name: Mark Anderson
+    author_email: mark.anderson.2023@uni.strath.ac.uk
+    generated_timestamp: 1783523246
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
